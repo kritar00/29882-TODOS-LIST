@@ -1,18 +1,25 @@
 <template>
-    <form class="w-3/4 mx-auto p-9 flex justify-around shadow-md" action="">
-        <input class="w-3/4 shadow-lg" type="text" v-model="todo" name="todoItem" id="todo-input">
-        <button class="btn" type="" @click.prevent="postData(todo)">ADD</button>
-    </form>
+  <label>
+    {{ label }}
+    <input
+      class="w-3/4 shadow-lg"
+      type="text"
+      @input="$emit('input', $event.target.value)"
+      id="todo-input"
+    />
+  </label>
 </template>
 
 <script>
 export default {
-    props: ['postData'],
-    data() {
-        return {
-            todo: ""
-        }
-    }
-}
+  name: "InputComponent",
+  inheritAttrs: false,
+  props: {
+    label: String,
+  },
+  //   emits: ["input:modelValue"],
+  //   model: {
+  //     prop: "value",
+  //   },
+};
 </script>
-

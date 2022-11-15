@@ -1,9 +1,28 @@
 <template>
-    <div>
-        <select name="sort" id="sort-selection">
-            <option value="">None</option>
-            <option value="added-up">Added-up</option>
-            <option value="added-down">Added-down</option>
-        </select>
-    </div>
+  <div>
+    <select
+      @click="handleSort"
+      v-model="sorted"
+      name="sort"
+      id="sort-selection"
+    >
+      <option :value="true">Date Ascending</option>
+      <option :value="false">Date Descending</option>
+    </select>
+  </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      sorted: false,
+    };
+  },
+  methods: {
+    handleSort() {
+      this.$emit("sort", this.sorted);
+    },
+  },
+};
+</script>
