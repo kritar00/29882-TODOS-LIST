@@ -11,7 +11,6 @@
 import axios from "axios";
 import HomeView from "./views/HomeView.vue";
 import getDate from "@/components/helpers/helpers.js";
-// import { defineAsyncComponent } from "vue";
 const url = "https://636db3bc91576e19e32daf8a.mockapi.io/todoapi/todos";
 export default {
   components: {
@@ -27,8 +26,14 @@ export default {
       const response = await axios.get(url);
       this.data = response.data;
     },
-    async putData(data) {
-      const response = await axios.put(url, data);
+    async putData(id, title, checked) {
+      let obj = {
+        createdAt: getDate(),
+        id: id,
+        title: title,
+        completed: checked,
+      };
+      const response = await axios.put(`${url}/${id}`, obj);
       this.getData();
     },
     async postData(data) {
@@ -40,7 +45,6 @@ export default {
       };
       const response = await axios.post(url, obj);
       this.getData();
-      // this.$refs.inputForm.reset();
     },
     async deleteData(id) {
       const response = await axios.delete(`${url}/${id}`);

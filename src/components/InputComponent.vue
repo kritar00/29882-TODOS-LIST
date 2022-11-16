@@ -1,11 +1,12 @@
 <template>
-  <label>
-    {{ label }}
+  <label class="w-full">
+    <span class="whitespace-nowrap font-bold">{{ label }}</span>
     <input
-      class="w-3/4 shadow-lg"
+      class="w-full shadow-lg"
       type="text"
-      @input="$emit('input', $event.target.value)"
-      id="todo-input"
+      :value="modelValue"
+      v-bind="$attrs"
+      @input="$emit('update:modelValue', $event.target.value)"
     />
   </label>
 </template>
@@ -13,13 +14,10 @@
 <script>
 export default {
   name: "InputComponent",
-  inheritAttrs: false,
   props: {
+    modelValue: String,
     label: String,
   },
-  //   emits: ["input:modelValue"],
-  //   model: {
-  //     prop: "value",
-  //   },
+  emits: ["update:modelValue"],
 };
 </script>

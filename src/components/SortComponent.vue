@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="border border-solid border-sky-300 py-1 rounded-lg">
     <select
       @click="handleSort"
       v-model="sorted"

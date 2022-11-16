@@ -7,7 +7,7 @@
       {{ item.completed ? "Finished" : "Unfinished" }}
     </p>
     <div class="ml-auto flex gap-3">
-      <button @click="toggleEdit()">
+      <button @click="editClicked()">
         <i class="text-xl text-blue-500 uil uil-edit-alt"></i>
       </button>
       <button @click="deleteData(item.id)">
@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  props: ["item", "putData", "deleteData", "toggleEdit"],
+  props: ["item", "deleteData", "toggleEdit"],
   data() {
     return {};
   },
@@ -29,6 +29,14 @@ export default {
         "bg-green-400": this.item.completed,
         "bg-red-400": !this.item.completed,
       };
+    },
+    editClicked() {
+      this.toggleEdit();
+      this.$emit("edit", {
+        id: this.item.id,
+        title: this.item.title,
+        completed: this.item.completed,
+      });
     },
   },
 };
