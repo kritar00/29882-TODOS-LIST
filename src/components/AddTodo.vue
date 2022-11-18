@@ -18,12 +18,12 @@
       <option value="Kirby">Kirby</option>
       <option value="Beaver">Beaver</option>
     </select>
-    <div>
+    <div class="flex justify-around">
       <button
         title="Create new todo"
         type="submit"
         @click="postData"
-        class="btn"
+        class="btn bg-havelock-blue-400 hover:bg-havelock-blue-700 hover:text-white-50"
         :disabled="!todo.due || !todo.user"
       >
         Add it
@@ -32,7 +32,7 @@
         title="Cancel action"
         type="button"
         @click="this.toggleCreate()"
-        class="btn"
+        class="btn btn bg-roof-terracotta-400 hover:bg-roof-terracotta-700 hover:text-white-50"
       >
         Cancel
       </button>
