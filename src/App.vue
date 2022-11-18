@@ -22,20 +22,36 @@ export default {
   },
   methods: {
     async getData() {
-      const response = await axios.get(url);
-      this.data = response.data;
+      try {
+        const response = await axios.get(url);
+        this.data = response.data;
+      } catch (error) {
+        console.log(error.response.data.error);
+      }
     },
     async putData(data) {
-      const response = await axios.put(`${url}/${data.id}`, data);
-      this.getData();
+      try {
+        await axios.put(`${url}/${data.id}`, data);
+        this.getData();
+      } catch (error) {
+        console.log(error.response.data.error);
+      }
     },
     async postData(data) {
-      const response = await axios.post(url, data);
-      this.getData();
+      try {
+        await axios.post(url, data);
+        this.getData();
+      } catch (error) {
+        console.log(error.response.data.error);
+      }
     },
     async deleteData(id) {
-      const response = await axios.delete(`${url}/${id}`);
-      this.getData();
+      try {
+        await axios.delete(`${url}/${id}`);
+        this.getData();
+      } catch (error) {
+        console.log(error.response.data.error);
+      }
     },
   },
   async mounted() {

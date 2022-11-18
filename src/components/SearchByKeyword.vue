@@ -2,7 +2,7 @@
   <BaseInput
     class="flex gap-2"
     label="Search"
-    v-model="keyword"
+    v-model.trim="keyword"
     placeholder="Search todos..."
   />
   <button
@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     searchHandler() {
-      if (!this.keyword.trim()) {
+      if (!this.keyword) {
         alert("Enter search keywords");
         return;
       }

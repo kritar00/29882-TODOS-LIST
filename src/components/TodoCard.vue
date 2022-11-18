@@ -25,10 +25,10 @@
     <p class="ml-auto">{{ item.user }}</p>
     <div class="ml-auto flex flex-col">
       <div class="flex gap-3 justify-center">
-        <button @click="editClicked()">
+        <button @click="onEditClicked">
           <i class="text-xl text-havelock-blue-700 uil uil-edit-alt"></i>
         </button>
-        <button @click="deleteTodo(item.id)">
+        <button @click="deleteData(item.id)">
           <i class="text-xl text-roof-terracotta-400 uil uil-trash-alt"></i>
         </button>
       </div>
@@ -39,13 +39,10 @@
 <script>
 import defaultImg from "@/assets/Error.svg";
 export default {
-  props: ["item", "deleteTodo", "toggleEdit"],
+  props: ["item", "deleteData", "onToggleEdit"],
   data() {
     return {
-      isCompleted: {
-        id: this.item.id,
-        isCompleted: this.item.isCompleted,
-      },
+      isCompleted: Object.assign({}, this.item),
     };
   },
   computed: {
@@ -56,8 +53,8 @@ export default {
     },
   },
   methods: {
-    editClicked() {
-      this.toggleEdit();
+    onEditClicked() {
+      this.onToggleEdit();
       this.$emit("editTodo", this.item);
     },
     isChecked() {

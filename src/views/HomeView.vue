@@ -13,9 +13,9 @@
         placeholder="Type your todo here..."
         required
         label="Todo input"
-        v-model="todoTitle"
+        v-model.trim="todoTitle"
       />
-      <button class="btn" @click="toggleCreate" type="button">ADD</button>
+      <button class="btn" @click="onToggleCreate" type="button">ADD</button>
     </form>
   </section>
   <section class="py-9">
@@ -33,12 +33,12 @@
     >
     <div class="cards">
       <TodoCard
-        v-for="item in filteredItems"
-        :key="item.id"
+        v-for="(item, index) in filteredItemsComputed"
+        :key="`todoItem-${index}`"
         :id="item.id"
         :item="item"
-        :deleteTodo="deleteData"
-        :toggleEdit="toggleEdit"
+        :deleteData="deleteData"
+        :onToggleEdit="onToggleEdit"
         @editTodo="onEditClick($event)"
         @isChecked="putTodo($event)"
         class="w-11/12 p-10 mx-auto flex items-center"
@@ -51,17 +51,17 @@
       <EditTodo
         :currentItem="currentItem"
         :putData="putData"
-        :toggleEdit="toggleEdit"
-        :deleteTodo="deleteData"
+        :onToggleEdit="onToggleEdit"
+        :deleteData="deleteData"
       />
     </form>
     <form
       v-if="isShowCreate"
-      @submit.prevent="postTodo"
+      @submit.prevent="onPostTodo"
       class="w-full top-0 left-0 fixed bg-black-900/50 h-full"
     >
       <AddTodo
-        :toggleCreate="toggleCreate"
+        :onToggleCreate="onToggleCreate"
         @addTodo="getDataFromInput($event)"
       />
     </form>
@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       isShowEdit: false,
-      filter: "All",
+      filter: null,
       isSorted: false,
       todoTitle: "",
       currentItem: {
@@ -98,90 +98,40 @@ export default {
     };
   },
   computed: {
-    filteredItems() {
+    filteredItemsComputed() {
       let reg = new RegExp(this.search, "i");
-      const dataClone = this.data;
-      if (this.filter === "All") {
-        if (this.isSorted)
-          if (this.search)
-            return dataClone
-              .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-              .filter(function (item) {
-                return item.title.search(reg) != -1;
-              });
-          else
-            return dataClone.sort(
-              (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-            );
-        if (this.search)
-          return dataClone
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            .filter(function (item) {
-              return item.title.search(reg) != -1;
-            });
-        return dataClone.sort(
+      let resultData = [...this.data];
+      if (this.filter || this.filter == false) {
+        resultData = resultData.filter(
+          (item) => item.isCompleted == this.filter
+        );
+      }
+      if (this.search) {
+        resultData = resultData.filter(function (item) {
+          return item.title.search(reg) != -1;
+        });
+      }
+      if (this.isSorted) {
+        resultData = resultData.sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        );
+      } else {
+        resultData = resultData.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
       }
-      if (this.filter)
-        if (this.isSorted)
-          if (this.search)
-            return dataClone
-              .filter(
-                (item) =>
-                  item.isCompleted == this.filter &&
-                  item.title.search(reg) != -1
-              )
-              .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-          else
-            return dataClone
-              .filter((item) => item.isCompleted == this.filter)
-              .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-        else if (this.search)
-          return dataClone
-            .filter(
-              (item) =>
-                item.isCompleted == this.filter && item.title.search(reg) != -1
-            )
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        else
-          return dataClone
-            .filter((item) => item.isCompleted == this.filter)
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      else if (this.isSorted)
-        if (this.search)
-          return dataClone
-            .filter(
-              (item) =>
-                item.isCompleted == this.filter && item.title.search(reg) != -1
-            )
-            .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-        else
-          return dataClone
-            .filter((item) => item.isCompleted == this.filter)
-            .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      else if (this.search)
-        return dataClone
-          .filter(
-            (item) =>
-              item.isCompleted == this.filter && item.title.search(reg) != -1
-          )
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      else
-        return dataClone
-          .filter((item) => item.isCompleted == this.filter)
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      return resultData;
     },
   },
   methods: {
-    toggleCreate() {
+    onToggleCreate() {
       if (!this.todoTitle.trim()) {
         alert("Please type in your todo");
         return;
       }
       this.isShowCreate = !this.isShowCreate;
     },
-    toggleEdit() {
+    onToggleEdit() {
       this.isShowEdit = !this.isShowEdit;
     },
     onFilterClick(value) {
@@ -190,23 +140,18 @@ export default {
     onSortedClick(value) {
       this.isSorted = value;
     },
-    postTodo() {
-      this.currentItem.title = this.todoTitle.trim();
+    onPostTodo() {
+      this.currentItem.title = this.todoTitle;
       this.currentItem.createdAt = getDate();
       this.postData(this.currentItem);
       this.$refs.inputForm.reset();
-      this.toggleCreate();
+      this.onToggleCreate();
     },
     onEditClick(value) {
       this.currentItem = value;
     },
     getDataFromInput(value) {
-      let current = this.currentItem;
-      current.title = value.title;
-      current.image = value.image;
-      current.due = value.due;
-      current.user = value.user;
-      current.isCompleted = value.isCompleted ? true : false;
+      this.currentItem = Object.assign({}, value);
     },
     putTodo(value) {
       this.putData(value);

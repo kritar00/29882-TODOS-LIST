@@ -27,7 +27,7 @@
       <button
         title="Create new todo"
         type="submit"
-        @click="postData"
+        @click="onPostData"
         class="btn bg-havelock-blue-400 hover:bg-havelock-blue-700 hover:text-white-50"
         :disabled="!todo.due || !todo.user"
       >
@@ -36,7 +36,7 @@
       <button
         title="Cancel action"
         type="button"
-        @click="this.toggleCreate()"
+        @click="this.onToggleCreate()"
         class="btn btn bg-roof-terracotta-400 hover:bg-roof-terracotta-700 hover:text-white-50"
       >
         Cancel
@@ -60,10 +60,10 @@ export default {
     };
   },
   methods: {
-    postData() {
+    onPostData() {
       this.$emit("addTodo", this.todo);
     },
   },
-  props: ["toggleCreate"],
+  props: ["onToggleCreate"],
 };
 </script>

@@ -2,11 +2,11 @@
   <div class="border border-solid border-havelock-blue-300 py-1 rounded-lg">
     <select
       name="filter"
-      @click="handleFilter"
+      @click="onHandleFilter"
       v-model="filter"
       id="filter-selection"
     >
-      <option>All</option>
+      <option :value="null">All</option>
       <option :value="true">Finished</option>
       <option :value="false">Unfinished</option>
     </select>
@@ -17,11 +17,11 @@
 export default {
   data() {
     return {
-      filter: "All",
+      filter: null,
     };
   },
   methods: {
-    handleFilter() {
+    onHandleFilter() {
       this.$emit("filter", this.filter);
     },
   },

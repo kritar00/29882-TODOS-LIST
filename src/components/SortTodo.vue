@@ -1,8 +1,8 @@
 <template>
   <div class="border border-solid border-havelock-blue-300 py-1 rounded-lg">
     <select
-      @click="handleSort"
-      v-model="sorted"
+      @click="onHandleSort"
+      v-model="isSorted"
       name="sort"
       id="sort-selection"
     >
@@ -16,12 +16,12 @@
 export default {
   data() {
     return {
-      sorted: false,
+      isSorted: false,
     };
   },
   methods: {
-    handleSort() {
-      this.$emit("sort", this.sorted);
+    onHandleSort() {
+      this.$emit("sort", this.isSorted);
     },
   },
 };
