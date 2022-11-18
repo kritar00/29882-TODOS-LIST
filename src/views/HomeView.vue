@@ -33,7 +33,7 @@
     >
     <div class="cards">
       <TodoCard
-        v-for="item in filtered_items"
+        v-for="item in filteredItems"
         :key="item.id"
         :id="item.id"
         :item="item"
@@ -45,7 +45,7 @@
       />
     </div>
     <form
-      v-if="showEdit"
+      v-if="isShowEdit"
       class="w-full top-0 left-0 fixed bg-black-900/50 h-full"
     >
       <EditTodo
@@ -56,7 +56,7 @@
       />
     </form>
     <form
-      v-if="showCreate"
+      v-if="isShowCreate"
       @submit.prevent="postTodo"
       class="w-full top-0 left-0 fixed bg-black-900/50 h-full"
     >
@@ -80,29 +80,29 @@ export default {
   name: "HomeView",
   data() {
     return {
-      showEdit: false,
+      isShowEdit: false,
       filter: "All",
-      sorted: false,
+      isSorted: false,
       todoTitle: "",
       currentItem: {
         title: "",
         id: "",
-        completed: false,
+        isCompleted: false,
         image: "",
         user: "",
         due: "",
         createdAt: "",
       },
       search: "",
-      showCreate: false,
+      isShowCreate: false,
     };
   },
   computed: {
-    filtered_items() {
+    filteredItems() {
       let reg = new RegExp(this.search, "i");
       const dataClone = this.data;
       if (this.filter === "All") {
-        if (this.sorted)
+        if (this.isSorted)
           if (this.search)
             return dataClone
               .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
@@ -124,51 +124,52 @@ export default {
         );
       }
       if (this.filter)
-        if (this.sorted)
+        if (this.isSorted)
           if (this.search)
             return dataClone
               .filter(
                 (item) =>
-                  item.completed == this.filter && item.title.search(reg) != -1
+                  item.isCompleted == this.filter &&
+                  item.title.search(reg) != -1
               )
               .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
           else
             return dataClone
-              .filter((item) => item.completed == this.filter)
+              .filter((item) => item.isCompleted == this.filter)
               .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         else if (this.search)
           return dataClone
             .filter(
               (item) =>
-                item.completed == this.filter && item.title.search(reg) != -1
+                item.isCompleted == this.filter && item.title.search(reg) != -1
             )
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         else
           return dataClone
-            .filter((item) => item.completed == this.filter)
+            .filter((item) => item.isCompleted == this.filter)
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      else if (this.sorted)
+      else if (this.isSorted)
         if (this.search)
           return dataClone
             .filter(
               (item) =>
-                item.completed == this.filter && item.title.search(reg) != -1
+                item.isCompleted == this.filter && item.title.search(reg) != -1
             )
             .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         else
           return dataClone
-            .filter((item) => item.completed == this.filter)
+            .filter((item) => item.isCompleted == this.filter)
             .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       else if (this.search)
         return dataClone
           .filter(
             (item) =>
-              item.completed == this.filter && item.title.search(reg) != -1
+              item.isCompleted == this.filter && item.title.search(reg) != -1
           )
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       else
         return dataClone
-          .filter((item) => item.completed == this.filter)
+          .filter((item) => item.isCompleted == this.filter)
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     },
   },
@@ -178,16 +179,16 @@ export default {
         alert("Please type in your todo");
         return;
       }
-      this.showCreate = !this.showCreate;
+      this.isShowCreate = !this.isShowCreate;
     },
     toggleEdit() {
-      this.showEdit = !this.showEdit;
+      this.isShowEdit = !this.isShowEdit;
     },
     onFilterClick(value) {
       this.filter = value;
     },
     onSortedClick(value) {
-      this.sorted = value;
+      this.isSorted = value;
     },
     postTodo() {
       this.currentItem.title = this.todoTitle.trim();
@@ -205,7 +206,7 @@ export default {
       current.image = value.image;
       current.due = value.due;
       current.user = value.user;
-      current.completed = value.completed ? true : false;
+      current.isCompleted = value.isCompleted ? true : false;
     },
     putTodo(value) {
       this.putData(value);

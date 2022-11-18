@@ -33,7 +33,7 @@
       />
       <span class="flex items-center mt-4 gap-3">
         <label for="finished">Mark as finished</label>
-        <input type="checkbox" id="finished" v-model="edited.completed" />
+        <input type="checkbox" id="finished" v-model="edited.isCompleted" />
       </span>
     </div>
     <div class="mt-2 flex justify-around">
@@ -67,7 +67,7 @@ export default {
       edited: {
         id: this.currentItem.id,
         title: this.currentItem.title,
-        completed: this.currentItem.completed,
+        isCompleted: this.currentItem.isCompleted,
         image: this.currentItem.image,
         due: this.currentItem.due,
       },

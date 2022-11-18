@@ -2,7 +2,7 @@
   <div>
     <input
       class="mr-2"
-      v-model="completed.completed"
+      v-model="isCompleted.isCompleted"
       type="checkbox"
       @change="isChecked"
     />
@@ -17,7 +17,7 @@
       alt="dummy image"
     />
     <p :class="className" class="rounded-xl text-xl ml-auto py-1 px-5">
-      <span v-if="item.completed">Finished</span>
+      <span v-if="item.isCompleted">Finished</span>
       <span v-else title="Due time"
         ><i class="text-grandis-400 uil uil-hourglass"></i>{{ item.due }}</span
       >
@@ -42,15 +42,15 @@ export default {
   props: ["item", "deleteTodo", "toggleEdit"],
   data() {
     return {
-      completed: {
+      isCompleted: {
         id: this.item.id,
-        completed: this.item.completed,
+        isCompleted: this.item.isCompleted,
       },
     };
   },
   computed: {
     className() {
-      return this.item.completed
+      return this.item.isCompleted
         ? "bg-la-palma-400"
         : "border-grandis-400 border";
     },
@@ -61,7 +61,7 @@ export default {
       this.$emit("editTodo", this.item);
     },
     isChecked() {
-      this.$emit("isChecked", this.completed);
+      this.$emit("isChecked", this.isCompleted);
     },
     replaceByDefault(e) {
       e.target.src = defaultImg;
