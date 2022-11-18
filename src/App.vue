@@ -1,9 +1,9 @@
 <template>
   <HomeView
     :data="data"
-    :putData="putData"
-    :postData="postData"
-    :deleteData="deleteData"
+    @putDataToApi="putData($event)"
+    @postDataToApi="postData($event)"
+    @deleteDataFromApi="deleteData"
   />
 </template>
 

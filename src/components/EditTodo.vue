@@ -60,7 +60,7 @@
 import BaseInput from "./BaseInput.vue";
 
 export default {
-  props: ["onToggleEdit", "currentItem", "deleteData", "putData"],
+  props: ["onToggleEdit", "currentItem", "deleteData"],
   name: "EditComponent",
   data() {
     return {
@@ -74,14 +74,16 @@ export default {
   },
   methods: {
     onSave() {
-      this.putData(this.edited);
+      // this.putData(this.edited);
+      this.$emit("putData", this.edited);
       this.onToggleEdit();
     },
     onDelete() {
-      this.deleteData(this.currentItem.id);
+      this.$emit("deleteData", this.currentItem.id);
       this.onToggleEdit();
     },
   },
+  emits: ["putData", "deleteData"],
   components: { BaseInput },
 };
 </script>

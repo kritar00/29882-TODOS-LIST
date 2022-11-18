@@ -37,7 +37,7 @@
         :key="`todoItem-${index}`"
         :id="item.id"
         :item="item"
-        :deleteData="deleteData"
+        @deleteData="deleteTodo($event)"
         :onToggleEdit="onToggleEdit"
         @editTodo="onEditClick($event)"
         @isChecked="putTodo($event)"
@@ -50,9 +50,9 @@
     >
       <EditTodo
         :currentItem="currentItem"
-        :putData="putData"
+        @putData="putTodo($event)"
         :onToggleEdit="onToggleEdit"
-        :deleteData="deleteData"
+        @deleteData="deleteTodo($event)"
       />
     </form>
     <form
@@ -143,7 +143,7 @@ export default {
     onPostTodo() {
       this.currentItem.title = this.todoTitle;
       this.currentItem.createdAt = getDate();
-      this.postData(this.currentItem);
+      this.$emit("postDataToApi", this.currentItem);
       this.$refs.inputForm.reset();
       this.onToggleCreate();
     },
@@ -154,12 +154,17 @@ export default {
       this.currentItem = Object.assign({}, value);
     },
     putTodo(value) {
-      this.putData(value);
+      console.log(value);
+      this.$emit("putDataToApi", value);
     },
     onSearchClick(value) {
       this.search = value;
     },
+    deleteTodo(id) {
+      this.$emit("deleteDataFromApi", id);
+    },
   },
+  emits: ["putDataToApi", "postDataToApi", "deleteDataFromApi"],
   components: {
     BaseInput,
     FilterTodo,
@@ -169,6 +174,6 @@ export default {
     SearchByKeyword,
     AddTodo,
   },
-  props: ["data", "putData", "postData", "deleteData"],
+  props: ["data"],
 };
 </script>

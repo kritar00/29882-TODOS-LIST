@@ -39,7 +39,7 @@
 <script>
 import defaultImg from "@/assets/Error.svg";
 export default {
-  props: ["item", "deleteData", "onToggleEdit"],
+  props: ["item", "onToggleEdit"],
   data() {
     return {
       isCompleted: Object.assign({}, this.item),
@@ -63,7 +63,10 @@ export default {
     replaceByDefault(e) {
       e.target.src = defaultImg;
     },
+    deleteData(id) {
+      this.$emit("deleteData", id);
+    },
   },
-  emits: ["editTodo", "isChecked"],
+  emits: ["editTodo", "isChecked", "deleteData"],
 };
 </script>
