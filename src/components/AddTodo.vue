@@ -12,13 +12,18 @@
       type="url"
     />
     <BaseInput class="my-4" label="Due date" v-model="todo.due" type="date" />
-    <label for="user-selection">For:</label>
-    <select name="username" id="user-selection" v-model="todo.user">
+    <label class="font-bold" for="user-selection">For:</label>
+    <select
+      class="shadow-lg"
+      name="username"
+      id="user-selection"
+      v-model="todo.user"
+    >
       <option value="Machine">Machine</option>
       <option value="Kirby">Kirby</option>
       <option value="Beaver">Beaver</option>
     </select>
-    <div class="flex justify-around">
+    <div class="flex mt-4 justify-around">
       <button
         title="Create new todo"
         type="submit"
