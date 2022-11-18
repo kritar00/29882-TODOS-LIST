@@ -3,8 +3,10 @@
 @tailwind utilities;
 
 @layer components {
-    .btn {
-        padding: 6px 12px;
-        border-radius: 12px;
-    }
+  .btn {
+    padding: 6px 12px;
+    border-radius: 12px;
+    transition: ease-in;
+    transition-duration: 200ms;
+  }
 }

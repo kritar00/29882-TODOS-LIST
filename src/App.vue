@@ -9,8 +9,7 @@
 
 <script>
 import axios from "axios";
-import HomeView from "./views/HomeView.vue";
-import getDate from "@/components/helpers/helpers.js";
+import HomeView from "@/views/HomeView.vue";
 const url = "https://636db3bc91576e19e32daf8a.mockapi.io/todoapi/todos";
 export default {
   components: {
@@ -26,24 +25,12 @@ export default {
       const response = await axios.get(url);
       this.data = response.data;
     },
-    async putData(id, title, checked) {
-      let obj = {
-        createdAt: getDate(),
-        id: id,
-        title: title,
-        completed: checked,
-      };
-      const response = await axios.put(`${url}/${id}`, obj);
+    async putData(data) {
+      const response = await axios.put(`${url}/${data.id}`, data);
       this.getData();
     },
     async postData(data) {
-      let obj = {
-        createdAt: getDate(),
-        id: "",
-        title: data,
-        completed: false,
-      };
-      const response = await axios.post(url, obj);
+      const response = await axios.post(url, data);
       this.getData();
     },
     async deleteData(id) {

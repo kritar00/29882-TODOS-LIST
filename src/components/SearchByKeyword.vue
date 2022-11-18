@@ -1,12 +1,12 @@
 <template>
-  <InputComponent
+  <BaseInput
     class="flex gap-2"
     label="Search"
     v-model="keyword"
     placeholder="Search todos..."
   />
   <button
-    class="btn bg-sky-400 hover:bg-sky-700 ease-in duration-200 text-white border"
+    class="btn bg-havelock-blue-300 hover:bg-havelock-blue-500 text-white border border-havelock-blue-500 hover:text-white-50 mr-3"
     @click="searchHandler"
   >
     Search
@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import InputComponent from "./InputComponent.vue";
+import BaseInput from "./BaseInput.vue";
 export default {
-  components: { InputComponent },
+  components: { BaseInput },
   data() {
     return {
       keyword: "",
@@ -24,6 +24,10 @@ export default {
   },
   methods: {
     searchHandler() {
+      if (!this.keyword.trim()) {
+        alert("Enter search keywords");
+        return;
+      }
       this.$emit("searchByKeyword", this.keyword);
     },
   },

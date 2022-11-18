@@ -1,79 +1,107 @@
 <template>
   <section>
-    <h1 class="text-5xl p-4 underline text-orange-500 text-center">
+    <h1 class="text-5xl p-4 underline text-tia-maria-500 text-center">
       My todo-s!
     </h1>
     <form
       ref="inputForm"
       class="w-3/4 mx-auto p-9 flex justify-around shadow-md"
-      @submit.prevent="postTodo"
     >
-      <InputComponent
+      <BaseInput
+        type="text"
         class="flex items-center gap-3 justify-center"
         placeholder="Type your todo here..."
         required
         label="Todo input"
-        v-model="todo"
+        v-model="todoTitle"
       />
-      <button class="btn" type="submit">ADD</button>
+      <button class="btn" @click="toggleCreate" type="button">ADD</button>
     </form>
   </section>
   <section class="py-9">
     <div class="flex items-center w-fit ml-auto p-8">
-      <SearchComponent @searchByKeyword="onSearchClick($event)" />
-      <FilterComponent @filter="onFilterClick($event)" />
-      <SortComponent @sort="onSortedClick($event)" />
+      <SearchByKeyword @searchByKeyword="onSearchClick($event)" />
+      <FilterTodo @filter="onFilterClick($event)" />
+      <SortTodo @sort="onSortedClick($event)" />
     </div>
+    <a
+      v-if="search"
+      class="underline float-right mr-7"
+      href="#"
+      @click="search = ''"
+      >Remove search value</a
+    >
     <div class="cards">
       <TodoCard
         v-for="item in filtered_items"
         :key="item.id"
         :id="item.id"
         :item="item"
-        :deleteData="deleteData"
+        :deleteTodo="deleteData"
         :toggleEdit="toggleEdit"
-        @edit="onEditClick($event)"
-        class="w-4/5 p-10 mx-auto flex"
+        @editTodo="onEditClick($event)"
+        @isChecked="putTodo($event)"
+        class="w-11/12 p-10 mx-auto flex items-center"
       />
     </div>
     <form
       v-if="showEdit"
-      @submit.prevent="putTodo"
-      class="w-full top-0 left-0 fixed bg-black/50 h-full"
+      class="w-full top-0 left-0 fixed bg-black-900/50 h-full"
     >
-      <EditComponent
-        :currentEdit="currentEdit"
-        @put="getDataFromEdit($event)"
+      <EditTodo
+        :currentItem="currentItem"
+        :putData="putData"
         :toggleEdit="toggleEdit"
+        :deleteTodo="deleteData"
+      />
+    </form>
+    <form
+      v-if="showCreate"
+      @submit.prevent="postTodo"
+      class="w-full top-0 left-0 fixed bg-black-900/50 h-full"
+    >
+      <AddTodo
+        :toggleCreate="toggleCreate"
+        @addTodo="getDataFromInput($event)"
       />
     </form>
   </section>
 </template>
 <script>
-import FilterComponent from "@/components/FilterComponent.vue";
-import InputComponent from "@/components/InputComponent.vue";
-import SortComponent from "@/components/SortComponent.vue";
+import FilterTodo from "@/components/FilterTodo.vue";
+import BaseInput from "@/components/BaseInput.vue";
+import SortTodo from "@/components/SortTodo.vue";
 import TodoCard from "@/components/TodoCard.vue";
-import EditComponent from "../components/EditComponent.vue";
-import SearchComponent from "../components/SearchComponent.vue";
-
+import EditTodo from "../components/EditTodo.vue";
+import SearchByKeyword from "../components/SearchByKeyword.vue";
+import AddTodo from "../components/AddTodo.vue";
+import getDate from "@/helpers/helpers.js";
 export default {
   name: "HomeView",
   data() {
     return {
-      todo: "",
       showEdit: false,
-      filter: null,
+      filter: "All",
       sorted: false,
-      currentEdit: {},
+      todoTitle: "",
+      currentItem: {
+        title: "",
+        id: "",
+        completed: false,
+        image: "",
+        user: "",
+        due: "",
+        createdAt: "",
+      },
       search: "",
+      showCreate: false,
     };
   },
   computed: {
     filtered_items() {
       let reg = new RegExp(this.search, "i");
       const dataClone = this.data;
-      if (this.filter === null || this.filter === "All") {
+      if (this.filter === "All") {
         if (this.sorted)
           if (this.search)
             return dataClone
@@ -145,6 +173,13 @@ export default {
     },
   },
   methods: {
+    toggleCreate() {
+      if (!this.todoTitle.trim()) {
+        alert("Please type in your todo");
+        return;
+      }
+      this.showCreate = !this.showCreate;
+    },
     toggleEdit() {
       this.showEdit = !this.showEdit;
     },
@@ -155,35 +190,38 @@ export default {
       this.sorted = value;
     },
     postTodo() {
-      this.postData(this.todo);
+      this.currentItem.title = this.todoTitle.trim();
+      this.currentItem.createdAt = getDate();
+      this.postData(this.currentItem);
       this.$refs.inputForm.reset();
+      this.toggleCreate();
     },
     onEditClick(value) {
-      this.currentEdit = value;
+      this.currentItem = value;
     },
-    getDataFromEdit(value) {
-      this.currentEdit.title = value.todo;
-      this.currentEdit.completed = value.checked;
+    getDataFromInput(value) {
+      let current = this.currentItem;
+      current.title = value.title;
+      current.image = value.image;
+      current.due = value.due;
+      current.user = value.user;
+      current.completed = value.completed ? true : false;
     },
-    putTodo() {
-      this.putData(
-        this.currentEdit.id,
-        this.currentEdit.title,
-        this.currentEdit.completed
-      );
-      this.toggleEdit();
+    putTodo(value) {
+      this.putData(value);
     },
     onSearchClick(value) {
       this.search = value;
     },
   },
   components: {
-    InputComponent,
-    FilterComponent,
-    SortComponent,
+    BaseInput,
+    FilterTodo,
+    SortTodo,
     TodoCard,
-    EditComponent,
-    SearchComponent,
+    EditTodo,
+    SearchByKeyword,
+    AddTodo,
   },
   props: ["data", "putData", "postData", "deleteData"],
 };

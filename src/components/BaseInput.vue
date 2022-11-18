@@ -3,7 +3,7 @@
     <span class="whitespace-nowrap font-bold">{{ label }}</span>
     <input
       class="w-full shadow-lg"
-      type="text"
+      :type="type"
       :value="modelValue"
       v-bind="$attrs"
       @input="$emit('update:modelValue', $event.target.value)"
@@ -13,10 +13,11 @@
 
 <script>
 export default {
-  name: "InputComponent",
+  name: "BaseInput",
   props: {
     modelValue: String,
     label: String,
+    type: String,
   },
   emits: ["update:modelValue"],
 };
